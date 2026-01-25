@@ -1,0 +1,50 @@
+{
+  "name": "project-customization-mcp",
+  "version": "0.1.0",
+  "description": "An MCP server for automating project customization based on best practices. Analyzes projects and generates customization files for any IDE or tool that supports the Model Context Protocol.",
+  "main": "./build/index.js",
+  "bin": {
+    "project-customization-mcp": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./build/index.js",
+    "dev": "tsx watch src/index.ts",
+    "prepare": "npm run build"
+  },
+  "files": [
+    "build",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "project-customization",
+    "code-analysis",
+    "project-guidelines",
+    "best-practices",
+    "ai",
+    "llm"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/project-customization-mcp.git"
+  },
+  "homepage": "https://github.com/yourusername/project-customization-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/project-customization-mcp/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
