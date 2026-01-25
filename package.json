@@ -1,6 +1,6 @@
 {
   "name": "project-customization-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An MCP server for automating project customization based on best practices. Analyzes projects and generates customization files for any IDE or tool that supports the Model Context Protocol.",
   "main": "./build/index.js",
   "bin": {
