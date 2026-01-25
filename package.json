@@ -1,10 +1,10 @@
 {
   "name": "project-customization-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An MCP server for automating project customization based on best practices. Analyzes projects and generates customization files for any IDE or tool that supports the Model Context Protocol.",
   "main": "./build/index.js",
   "bin": {
-    "project-customization-mcp": "./build/index.js"
+    "project-customization-mcp": "./bin/cli.js"
   },
   "scripts": {
     "build": "tsc",
@@ -14,8 +14,10 @@
   },
   "files": [
     "build",
+    "bin",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "package.json"
   ],
   "keywords": [
     "mcp",
@@ -27,16 +29,16 @@
     "ai",
     "llm"
   ],
-  "author": "Your Name",
+  "author": "Ivan Arsenović <ivanarsenovic015@gmail.com>",
   "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/project-customization-mcp.git"
+    "url": "https://github.com/e1imba/project-customization-mcp.git"
   },
-  "homepage": "https://github.com/yourusername/project-customization-mcp#readme",
+  "homepage": "https://github.com/e1imba/project-customization-mcp#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/project-customization-mcp/issues"
+    "url": "https://github.com/e1imba/project-customization-mcp/issues"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.3",

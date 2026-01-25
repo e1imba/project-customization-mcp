@@ -1,6 +1,6 @@
-# VS Code Customization MCP Server
+# VS Code Customization MCP Server - Implementation Guide
 
-An MCP (Model Context Protocol) server that helps automate VS Code project customization by analyzing projects and generating configuration files based on best practices.
+Complete documentation for developers and implementers of the Project Customization MCP server.
 
 ## Features
 
@@ -24,68 +24,77 @@ An MCP (Model Context Protocol) server that helps automate VS Code project custo
 - **generate-instructions-only**: Generate only Copilot instructions
 - **review-and-improve**: Review existing customizations and suggest improvements
 
-## Installation
-
-1. Build the server:
-
-```powershell
-npm install
-npm run build
-```
-
-2. Configure in VS Code:
-   - Open VS Code Command Palette (`Ctrl+Shift+P`)
-   - Run: "MCP: Open User Configuration"
-   - Add the server configuration:
-
-```json
-{
-  "mcpServers": {
-    "vs-code-customization": {
-      "command": "node",
-      "args": ["c:\\Users\\iv.arsenovic\\Projects\\MCP\\Server\\build\\index.js"]
-    }
-  }
-}
-```
-
-3. Restart VS Code or reload the window
-
-## Usage
-
-### Option 1: Free-form Chat (Recommended)
-
-Open Copilot Chat and type:
+## How It Works
 
 ```
-Analyze my project and set up Copilot customization based on best practices
+Your Code
+    ↓
+analyze_project (scans structure, detects type/frameworks)
+    ↓
+Project Analysis (type, frameworks, languages, issues)
+    ↓
+generate_copilot_instructions (creates customization file)
+    ↓
+update_readme (adds guidelines and setup instructions)
+    ↓
+get_customization_recommendations (suggests improvements)
+    ↓
+Generated Files + Recommendations
 ```
 
-The server will automatically:
+## Example Workflow
 
-1. Scan your project structure
-2. Detect frameworks and languages
-3. Generate `.github/copilot-instructions.md`
-4. Create/update README.md
-5. Provide recommendations
-
-### Option 2: Using Prompts
-
-Use slash commands to trigger specific workflows:
+### Input
 
 ```
-/analyze-and-customize
-/generate-instructions-only
-/review-and-improve
+User: "Analyze my React TypeScript project and set up customization"
 ```
 
-### Option 3: Access Resources
+### Generated Files
 
-Add project context to your chat:
+**`.github/copilot-instructions.md`:**
 
-- Add Context > MCP Resources > Project Metadata
-- Add Context > MCP Resources > Project Structure
-- Add Context > MCP Resources > Current Guidelines
+```markdown
+# Project Guidelines
+
+## Overview
+
+- **Type**: Node.js
+- **Framework**: React
+- **Language**: TypeScript
+
+## Code Style
+
+- Use functional components with hooks
+- Maintain strict TypeScript (no `any`)
+- ESLint + Prettier for formatting
+- camelCase for variables/functions, PascalCase for components
+
+## Structure
+
+- src/components - React components
+- src/pages - Page components
+- src/utils - Utilities
+- src/hooks - Custom hooks
+- src/types - TypeScript types
+
+[... more guidelines ...]
+```
+
+**`README.md`** (updated with):
+
+- Project description
+- Prerequisites and setup
+- Installation commands
+- Development guidelines
+- Best practices for the framework
+
+### Recommendations Provided
+
+- "Enable strict TypeScript mode"
+- "Add unit testing framework"
+- "Configure git hooks for commits"
+- "Set up CI/CD pipeline"
 
 ## Architecture
 
@@ -105,7 +114,38 @@ src/
       └── logger.ts           # Logging utility
 ```
 
-## Development
+## Installation for Development
+
+### Prerequisites
+
+- Node.js 16+
+- npm or yarn
+
+### Setup
+
+```powershell
+git clone https://github.com/yourusername/project-customization-mcp.git
+cd project-customization-mcp
+npm install
+npm run build
+```
+
+### Production Installation
+
+1. Build the server:
+
+```powershell
+npm install
+npm run build
+```
+
+2. Configure in VS Code or your IDE:
+   - Open MCP configuration
+   - Add the server configuration using one of the methods from README.md
+
+3. Restart your IDE or reload the window
+
+## Development Workflow
 
 ### Run in development mode:
 
@@ -125,66 +165,92 @@ npm run build
 npm start
 ```
 
-## How It Works
+## Customization
 
-1. **Project Analysis**: Scans project directory, detects:
-   - Project type (Node.js, Python, .NET)
-   - Frameworks (React, Vue, Next.js, etc.)
-   - Programming languages
-   - Existing customization files
+The server comes with sensible defaults for common frameworks. To customize for your team or organization:
 
-2. **Best Practices Application**: Uses official VS Code documentation to generate:
-   - Custom instructions tailored to project type
-   - Framework-specific coding standards
-   - Project structure guidelines
-   - Git workflow recommendations
+1. Fork/clone the repository
+2. Edit `src/utils/bestPractices.ts`:
+   - Modify `generateCopilotInstructions()` for your standards
+   - Adjust `generateReadmeContent()` for your format
+   - Customize `generateRecommendations()` for your priorities
 
-3. **File Generation**: Creates/updates:
-   - `.github/copilot-instructions.md`
-   - `README.md`
-   - Project documentation
+3. Build: `npm run build`
+4. Publish: `npm publish` (or use locally with path)
 
-4. **Recommendations**: Provides actionable suggestions for:
-   - Missing documentation
-   - Configuration improvements
-   - Best practice adoption
+## Supported Project Types
 
-## Example Workflow
+| Type          | Status             |
+| ------------- | ------------------ |
+| Node.js / npm | ✅ Full Support    |
+| TypeScript    | ✅ Full Support    |
+| React         | ✅ Full Support    |
+| Vue.js        | ✅ Full Support    |
+| Next.js       | ✅ Full Support    |
+| Python        | ✅ Full Support    |
+| .NET          | ✅ Full Support    |
+| Other         | ✅ Generic Support |
 
-```
-User: "Analyze my React TypeScript project and set up customization"
+## Troubleshooting
 
-MCP Server Actions:
-1. analyze_project → Detects React + TypeScript
-2. generate_copilot_instructions → Creates instructions with:
-   - React functional components guidance
-   - TypeScript strict mode requirements
-   - ESLint/Prettier standards
-3. update_readme → Adds:
-   - Project setup instructions
-   - Development guidelines
-4. get_customization_recommendations → Suggests:
-   - Enable TypeScript strict mode
-   - Add unit tests
-   - Configure git hooks
-```
+### Server not connecting
 
-## Next Steps
+1. Check MCP configuration syntax
+2. Verify command path is correct
+3. Ensure `build/index.js` exists (run `npm run build`)
+4. Check IDE logs for errors
 
-1. Try the server with your projects
-2. Customize `bestPractices.ts` for your organization
-3. Add more tools for specific workflows
-4. Extend with custom prompts for your team
+### Tools not appearing
+
+1. Reload IDE window
+2. Restart IDE completely
+3. Verify MCP server is running (check IDE status)
+4. Check server logs for errors
+
+### File permissions
+
+- Ensure write access to project directory
+- Check that `.github/` directory can be created
 
 ## Contributing
 
-Feel free to extend the server with:
+Contributions welcome! Areas for enhancement:
 
-- Additional tools for specific frameworks
-- Custom prompt templates
-- Organization-specific best practices
-- Integration with other development tools
+- [ ] Support for more languages/frameworks
+- [ ] Custom organization templates
+- [ ] Integration with CI/CD systems
+- [ ] Linting and formatting configuration generation
+- [ ] Test setup automation
+- [ ] Documentation generators
+
+### Development Guidelines
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Build and test locally (`npm run build`)
+5. Commit your changes with clear messages
+6. Push to your branch
+7. Open a Pull Request
+
+## Publishing
+
+See [PUBLISHING_CHECKLIST.md](PUBLISHING_CHECKLIST.md) and [QUICK_START_PUBLISH.md](QUICK_START_PUBLISH.md) for NPM publishing instructions.
+
+## Roadmap
+
+- [ ] Web-based configuration UI
+- [ ] Organization-specific templates library
+- [ ] Linter/formatter configuration generation
+- [ ] Test framework setup automation
+- [ ] Git hooks generation (Husky, etc.)
+- [ ] Pre-commit configuration
+- [ ] EditorConfig generation
 
 ## License
 
-MIT
+MIT License - See [LICENSE](LICENSE) file
+
+---
+
+**For user documentation**, see [README.md](README.md)
