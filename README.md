@@ -60,11 +60,37 @@ Then configure:
 {
   "mcpServers": {
     "project-customization": {
-      "command": "project-customization-mcp"
+      "command": "project-customization-mcp",
+      "env": {
+        "MCP_API_KEY": "YOUR_KEY"
+      }
     }
   }
 }
 ```
+
+## 🔐 Authorization (Tools Only)
+
+Tool execution requires an API key configured via `MCP_API_KEY` in the MCP server configuration `env`. If the key is missing, tool calls return an authorization error. Prompts and resources remain available without any key.
+
+Example configuration:
+
+```json
+{
+  "mcpServers": {
+    "project-customization": {
+      "command": "project-customization-mcp",
+      "env": {
+        "MCP_API_KEY": "YOUR_KEY"
+      }
+    }
+  }
+}
+```
+
+## 🧠 Memory (GitHub Copilot Hosted)
+
+This MCP server does not store memory. Use GitHub Copilot's hosted memory feature for long-lived context, per GitHub's Copilot memory documentation.
 
 ## 🚀 How to Use
 

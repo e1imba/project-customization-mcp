@@ -9,13 +9,47 @@ import { ResourceProviders } from './resources.js';
 import { PROMPT_TEMPLATES, getPromptContent, isValidPromptName } from './prompts.js';
 import { logger } from './utils/logger.js';
 
+const TOOL_API_KEY_ENV = 'MCP_API_KEY';
+const TOOL_API_KEY_VALUE = 'thisisdummyAPIkey';
+
+function getToolAuthErrorResponse(): { content: { type: 'text'; text: string }[]; isError: true } | null {
+  const configuredKey = process.env[TOOL_API_KEY_ENV];
+  if (!configuredKey) {
+    logger.warn(`Tool access blocked: ${TOOL_API_KEY_ENV} not configured`);
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Authorization required: API key not configured.',
+        },
+      ],
+      isError: true,
+    };
+  }
+
+  if (configuredKey !== TOOL_API_KEY_VALUE) {
+    logger.warn('Tool access blocked: invalid API key provided');
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Authorization required: invalid API key.',
+        },
+      ],
+      isError: true,
+    };
+  }
+
+  return null;
+}
+
 /**
  * Initialize and configure the MCP server
  */
 export function initializeServer(): McpServer {
   const server = new McpServer({
     name: 'project-customization-mcp',
-    version: '0.1.0',
+    version: '0.1.3',
   });
 
   // Register tools
@@ -42,11 +76,19 @@ function registerTools(server: McpServer): void {
   const analyzeProjectSchema = z.object({
     projectPath: z.string().optional(),
   }).shape;
-  server.tool(
+  server.registerTool(
     'analyze_project',
-    'Analyze a VS Code project structure and detect project type, frameworks, languages, and customization opportunities',
-    analyzeProjectSchema,
-    async (args) => {
+    {
+      description:
+        'Analyze a VS Code project structure and detect project type, frameworks, languages, and customization opportunities',
+      inputSchema: analyzeProjectSchema,
+    },
+    async (args, _extra) => {
+      const authError = getToolAuthErrorResponse();
+      if (authError) {
+        return authError;
+      }
+
       try {
         const result = await ToolHandlers.analyzeProject((args as any).projectPath);
         return {
@@ -77,11 +119,18 @@ function registerTools(server: McpServer): void {
     projectPath: z.string().optional(),
     analysisData: z.record(z.any()).optional(),
   }).shape;
-  server.tool(
+  server.registerTool(
     'generate_copilot_instructions',
-    'Generate a .github/copilot-instructions.md file based on project analysis and best practices',
-    generateInstructionsSchema,
-    async (args) => {
+    {
+      description: 'Generate a .github/copilot-instructions.md file based on project analysis and best practices',
+      inputSchema: generateInstructionsSchema,
+    },
+    async (args, _extra) => {
+      const authError = getToolAuthErrorResponse();
+      if (authError) {
+        return authError;
+      }
+
       try {
         const input = args as any;
         const result = await ToolHandlers.generateCopilotInstructions(input.projectPath, input.analysisData);
@@ -123,11 +172,18 @@ function registerTools(server: McpServer): void {
     guidelines: z.string().optional(),
     analysisData: z.record(z.any()).optional(),
   }).shape;
-  server.tool(
+  server.registerTool(
     'update_readme',
-    'Update or create README.md with project guidelines and best practices',
-    updateReadmeSchema,
-    async (args) => {
+    {
+      description: 'Update or create README.md with project guidelines and best practices',
+      inputSchema: updateReadmeSchema,
+    },
+    async (args, _extra) => {
+      const authError = getToolAuthErrorResponse();
+      if (authError) {
+        return authError;
+      }
+
       try {
         const input = args as any;
         const result = await ToolHandlers.updateReadme(input.projectPath, input.guidelines, input.analysisData);
@@ -168,11 +224,18 @@ function registerTools(server: McpServer): void {
     projectPath: z.string().optional(),
     analysisData: z.record(z.any()).optional(),
   }).shape;
-  server.tool(
+  server.registerTool(
     'get_customization_recommendations',
-    'Get recommendations for customizing VS Code settings, instruction files, and project guidelines',
-    recommendationsSchema,
-    async (args) => {
+    {
+      description: 'Get recommendations for customizing VS Code settings, instruction files, and project guidelines',
+      inputSchema: recommendationsSchema,
+    },
+    async (args, _extra) => {
+      const authError = getToolAuthErrorResponse();
+      if (authError) {
+        return authError;
+      }
+
       try {
         const input = args as any;
         const result = await ToolHandlers.getRecommendations(input.projectPath, input.analysisData);
