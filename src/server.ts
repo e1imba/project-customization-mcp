@@ -327,7 +327,6 @@ function registerPrompts(server: McpServer): void {
       }
     });
   }
-
   logger.info('Prompts registered successfully');
 }
 
