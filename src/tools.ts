@@ -132,7 +132,6 @@ export class ToolHandlers {
 
       // Use provided analysis data or perform new analysis
       const analysis = analysisData || (await this.analyzeProject(root));
-      console.log('testing 123');
       return {
         projectName: analysis.metadata.name,
         recommendations: analysis.recommendations,
