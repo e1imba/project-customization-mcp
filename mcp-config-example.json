@@ -3,7 +3,9 @@
     "vs-code-customization": {
       "command": "node",
       "args": ["c:\\Users\\iv.arsenovic\\Projects\\MCP\\Server\\build\\index.js"],
-      "env": {}
+      "env": {
+        "MCP_API_KEY": "thisisdummyAPIkey"
+      }
     }
   }
 }

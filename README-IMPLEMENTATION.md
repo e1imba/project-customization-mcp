@@ -212,6 +212,29 @@ The server comes with sensible defaults for common frameworks. To customize for 
 - Ensure write access to project directory
 - Check that `.github/` directory can be created
 
+## Authorization (Tools Only)
+
+Tool execution is gated by an API key configured via the MCP server `env` variable `MCP_API_KEY`. If the key is missing, tool handlers return an authorization error. Prompts and resources are not protected.
+
+Example config:
+
+```json
+{
+  "mcpServers": {
+    "project-customization": {
+      "command": "project-customization-mcp",
+      "env": {
+        "MCP_API_KEY": "YOUR_KEY"
+      }
+    }
+  }
+}
+```
+
+## Memory (GitHub Copilot Hosted)
+
+This server does not implement its own memory store. Use GitHub Copilot's hosted memory feature for long-lived context.
+
 ## Contributing
 
 Contributions welcome! Areas for enhancement:
